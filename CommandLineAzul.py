@@ -1,5 +1,10 @@
 #made by Alexandra Deane
 #runs in python 3.6
+
+"""
+Welcome to the wonderous game of Azul
+"""
+
 from AzulFunctions import *
 
 # Move = {"Factory": "Factory 1", "Colour": 1, "Row": "First"}
