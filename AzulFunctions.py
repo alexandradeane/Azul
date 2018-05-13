@@ -1,4 +1,6 @@
 # Made by Alexandra Deane
+# runs in Python 3.6
+
 import random
 
 # On an actual Azul Board:
