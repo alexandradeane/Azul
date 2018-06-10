@@ -48,7 +48,6 @@ def InitializeGame():
 ### Printing Stuff Functions ###
 
 def PrintPassive(grid):
-    print("\nYour current Wall:")
     print(" ", end="")
     for col in range(5):
         if col > 0: print("\n", end=" ")
@@ -60,7 +59,6 @@ def PrintPassive(grid):
     print("\n", end="")
 
 def PrintActive(board):
-    print("\nYour current pattern lines:")
     print("First:  ", board["First"])
     print("Second: ", board["Second"])
     print("Third:  ", board["Third"])
@@ -69,10 +67,9 @@ def PrintActive(board):
     pass
 
 def PrintFloor(floor):
-    print("\nFloor:", floor)
+    print("\nFloor:", floor, "\n")
 
 def PrintFactories(factories):
-    print("\nFactories on the table:")
     print("Factory 1: ", factories["Factory 1"])
     print("Factory 2: ", factories["Factory 2"])
     print("Factory 3: ", factories["Factory 3"])
@@ -83,19 +80,15 @@ def PrintFactories(factories):
 
 def DisplayGame(game_state):
     player = game_state["Next Player"]
-    print("*** ", player, "***")
+    print("******** ", player, "********")
+    print("\nFactories on the table:")
     PrintFactories(game_state["Factories"])
-    if player == "Player 1":
-        PrintPassive(game_state["Player 1"]["Passive Board"])
-        PrintActive(game_state["Player 1"]["Active Board"])
-        PrintFloor(game_state["Player 1"]["Floor"])
-    elif player == "Player 2":
-        PrintPassive(game_state["Player 2"]["Passive Board"])
-        PrintActive(game_state["Player 2"]["Active Board"])
-        PrintFloor(game_state["Player 2"]["Floor"])
-    else:
-        print("Error: Missing a player?")
-
+    print("\nYour current Wall:")
+    PrintPassive(game_state[player]["Passive Board"])
+    print("\nYour current pattern lines:")
+    PrintActive(game_state[player]["Active Board"])
+    PrintFloor(game_state[player]["Floor"])
+    print("**************************")
 ### Do Stuff to Factories ###
 
 def EmptyFactories(game_state):  # Do not use except for testing. Deletes tiles.
@@ -155,10 +148,9 @@ def OrderCenter(game_state):
 
 def UpdateGameState(game_state, move):
     # Extra check just to make sure it is in fact a valid move.
-    if not (ValidFactory(game_state, move["Factory"]) and ValidColour(game_state, move["Colour"],
-                                                                      move["Factory"]) and ValidRow(game_state,
-                                                                                                    move["Row"],
-                                                                                                    move["Colour"])):
+    if not (ValidFactory(game_state, move["Factory"])
+            and ValidColour(game_state, move["Colour"], move["Factory"])
+            and ValidRow(game_state, move["Row"], move["Colour"])):
         print("This is not a valid move. Best not to update gamestate")
         return
     player = game_state["Next Player"]
@@ -167,7 +159,6 @@ def UpdateGameState(game_state, move):
     number_of_colour = my_tiles.count(colour)
     row_name = move["Row"]
     row = RowStringtoNum(row_name)
-
     # Add as many tiles of that colour on the factory to the row
     for j in range(number_of_colour):
         if row_name == "Floor":
@@ -177,7 +168,6 @@ def UpdateGameState(game_state, move):
                 game_state[player]["Active Board"][row_name].append(colour)
             else:
                 game_state[player]["Floor"].append(colour)
-
     # Moves the rest of the tiles on factory to the center
     if not move["Factory"] == "Center":
         game_state["Factories"][move["Factory"]] = []
@@ -223,7 +213,7 @@ def Player2_Move(game_state):
     # Get some valid user input for factory
     while True:
         try:
-            factory = str(input("Please enter 'Factory #': "))
+            factory = str(input("Please enter Factory #: "))
         except ValueError:
             print("You did not enter a string")
             continue
@@ -251,6 +241,7 @@ def Player2_Move(game_state):
             continue
         else:
             if not ValidRow(game_state, row, colour):
+                print("Not a valid row")
                 continue
             break
     if factory == "Default" or colour == 0 or row == "Zeroith":
@@ -280,7 +271,7 @@ def ValidColour(game_state, colour, factory):
     print("There is none of that colour on", factory)
     return False
 
-def ValidRow(game_state, row, colour):
+def ValidRow(game_state, row, colour): #Row passed as a string
     if row == "Floor":
         return True
     # make sure that they entered a row in the game
@@ -289,6 +280,7 @@ def ValidRow(game_state, row, colour):
         return False
     # Check that row does not contain tiles of another colour
     for color in game_state[game_state["Next Player"]]["Active Board"][row]:
+        #print("colour: ", colour)
         if color == colour:
             continue
         print("There are other colours in this row already")
@@ -296,6 +288,7 @@ def ValidRow(game_state, row, colour):
     # Check that passive board row does not contain a tile of this colour
     for brick in game_state[game_state["Next Player"]]["Passive Board"][RowStringtoNum(row) - 1]:
         if brick == colour:
+            print("That colour is already on your wall")
             return False
     return True
 
@@ -318,7 +311,7 @@ def RowStringtoNum(string):
 
 ### Scoring ###
 
-def PlaceToPutTile(colour, row, player):  # returns x,y coords of where to put tile
+def PlaceToPutTile(colour, row, player):  # returns x,y coords (indexed from 0)
     ro = row - 1
     col = 100
     for i in range(5):
@@ -339,7 +332,7 @@ def OccupiedWallCord(game_state, player, x, y):
         return True
     return False
 
-def MoveAndScoreTile(game_state, colour, x, y, row, player):  # still have to write
+def MoveAndScoreTile(game_state, colour, x, y, row, player):
     # move tile to passive board
     game_state[player]["Passive Board"][x][y] = colour
 
@@ -371,8 +364,8 @@ def MoveAndScoreTile(game_state, colour, x, y, row, player):  # still have to wr
         y_points = y_points + 1
         x_down = x_down + 1
     #print("y_points counting down = ", y_points)
-    print("X-points: ", x_points)
-    print("Y-points: ", y_points)
+    #print("X-points: ", x_points)
+    #print("Y-points: ", y_points)
 
     # Make sure not to count the original tile twice if there is only a row or only a column
     total_points = x_points + y_points
@@ -382,7 +375,7 @@ def MoveAndScoreTile(game_state, colour, x, y, row, player):  # still have to wr
         total_points = total_points - 1
     if x_points == 1 and y_points == 1:
         total_points = total_points + 1
-    print("Total points: ", total_points)
+    #print("Total points gained: ", total_points)
     # Add the total points to the player's score
     game_state["Scoreboard"][player] = game_state["Scoreboard"][player] + total_points
 
@@ -423,13 +416,11 @@ def ScoreFloor(game_state, player):
 def ScoreRound(game_state, player):
     for row in ["First", "Second", "Third", "Fourth", "Fifth"]:
         if RowIsFull(game_state, row, player):
-            print(row, end=" --- ")
+            print("Scoring", row, "row", end=" --- ")
             colour = game_state[player]["Active Board"][row][0]
-            print("Colour: ", colour)
+            print("colour: ", colour)
             x, y = PlaceToPutTile(colour, RowStringtoNum(row), player)
             #print("X: ", x , "Y: ", y)
-            if not ValidRow(game_state, row, colour):
-                print("ERROR, ScoreRound is saying that it is NOT a valid scoring move")
             MoveAndScoreTile(game_state, colour, x, y, row, player)
     ScoreFloor(game_state, player)
 
@@ -445,21 +436,27 @@ def EndConditionsMet(game_state):
 
 if __name__ == "__main__":
     ### This is an entire setup to facilitate scoring tests ###
+
+
+
     GameState = InitializeGame()
     player = GameState["Next Player"]
     EmptyFactories(GameState)
     GameState[player]["Passive Board"] = [[0, 2, 3, 0, 5],
-                                          [5, 1, 0, 0, 0],
+                                          [5, 0, 0, 0, 0],
                                           [0, 5, 1, 0, 3],
                                           [0, 0, 5, 1, 2],
                                           [2, 3, 4, 5, 1]]
     GameState[player]["Active Board"] = {"First": [],
-                                         "Second": [3, 3],
+                                         "Second": [1, 1],
                                          "Third": [4, 4],
                                          "Fourth": [2, 2],
                                          "Fifth": [5, 5, 5, 5]}
     GameState[player]["Floor"] = [3, 3, 1, 4, 5, 5, 3, 5, 2]
     GameState["Scoreboard"]["Player 1"] = 100
+
+    assert ValidRow(GameState, "Second", 1) == True
+    """
     print("#################### BEFORE SCORING #########################")
     DisplayGame(GameState)
     print("Cloth Bag: ", GameState["Cloth Bag"])
@@ -480,7 +477,7 @@ if __name__ == "__main__":
         BoxLidToBag(GameState)
     #PutTilesOnFactories()
     print("##### Score: ", GameState["Scoreboard"])
-    """
+    
     DisplayGame(GameState)
     print("Cloth Bag: ", GameState["Cloth Bag"])
     print("Box Lid: ", GameState["Box Lid"])

@@ -32,15 +32,22 @@ while True:
     print("UPDATED PLAYER BOARD:")
     DisplayGame(GameState)
     UpdatePlayer(GameState)
-
+    """
     ### Testing the scoring and endgame
     EmptyFactories(GameState)
+    GameState["Player 1"]["Active Board"] = {"First": [1],
+                                         "Second": [2, 2],
+                                         "Third": [3, 3],
+                                         "Fourth": [2, 2, 2],
+                                         "Fifth": [4, 4]}
     ###
-
+    """
     # Checks for end of round
     if NoMoreTiles(GameState):
         print("*** End of the round! ***")
+        print("Scoring Player 1")
         ScoreRound(GameState, "Player 1")
+        print("Scoring Player 2")
         ScoreRound(GameState, "Player 2")
         if EndConditionsMet(GameState):
             break
@@ -48,6 +55,8 @@ while True:
             BoxLidToBag(GameState)
         if not EnoughTilesInBag(GameState):
             print("ERROR: Not enough tiles in your bag even after refilling")
+            break
         PutTilesOnFactories(GameState)
+        print(GameState["Scoreboard"])
 
 print("Congratulations to the winner!")
