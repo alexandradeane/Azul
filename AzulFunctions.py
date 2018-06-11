@@ -1,5 +1,5 @@
 # Written by Alexandra Deane
-# runs in Python 3.6
+# runs with Python 3.6
 
 import random
 
@@ -80,7 +80,7 @@ def PrintFactories(factories):
 
 def DisplayGame(game_state):
     player = game_state["Next Player"]
-    print("******** ", player, "********")
+    print("*** ", player, "***")
     print("\nFactories on the table:")
     PrintFactories(game_state["Factories"])
     print("\nYour current Wall:")
@@ -88,7 +88,8 @@ def DisplayGame(game_state):
     print("\nYour current pattern lines:")
     PrintActive(game_state[player]["Active Board"])
     PrintFloor(game_state[player]["Floor"])
-    print("**************************")
+    print("************")
+
 ### Do Stuff to Factories ###
 
 def EmptyFactories(game_state):  # Do not use except for testing. Deletes tiles.

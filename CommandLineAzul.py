@@ -1,11 +1,10 @@
 # Written by Alexandra Deane
-# runs in python 3.6
+# runs with python 3.6
 
 """
-ToDo:
-Getting ERROR: Scoreround saying that it is NOT a valid scoring move
-congratulate winner
-test a whole bunch
+Todo: congratulate winner, Write a display function for after scoring,
+rewrite with better fundamental data structure (integers instead of strings),
+make a simple way to add an AI script, think about graphics
 """
 
 from AzulFunctions import *
@@ -14,35 +13,25 @@ from AzulFunctions import *
 
 print("Initializing GameState")
 GameState = InitializeGame()
-GameState["Next Player"] = "Player 1" #Testing purposes
 
 print("Commencing the gameplay loop")
 while True:
     print("\nNEXT PLAYER:")
     DisplayGame(GameState)
 
-    # Player gives their move
+    # Player gives move
     if GameState["Next Player"] == "Player 1":
         move = Player1_Move(GameState)
     else:
         move = Player2_Move(GameState)
 
-    # Gamestate is updated accordingly
+    # Gamestate updated accordingly
     print("\n", move, "\n")
     UpdateGameState(GameState, move)
     print("UPDATED PLAYER BOARD:")
     DisplayGame(GameState)
     UpdatePlayer(GameState)
-    """
-    ### Testing the scoring and endgame
-    EmptyFactories(GameState)
-    GameState["Player 1"]["Active Board"] = {"First": [1],
-                                         "Second": [2, 2],
-                                         "Third": [3, 3],
-                                         "Fourth": [2, 2, 2],
-                                         "Fifth": [4, 4]}
-    ###
-    """
+
     # Checks for end of round
     if NoMoreTiles(GameState):
         print("*** End of the round! ***")
@@ -58,6 +47,8 @@ while True:
             print("ERROR: Not enough tiles in your bag even after refilling")
             break
         PutTilesOnFactories(GameState)
-        print(GameState["Scoreboard"])
+        print("Scores: ", GameState["Scoreboard"])
 
+print("*** End of the game! ***")
+print("Final Scoreboard: ", GameState["Scoreboard"])
 print("Congratulations to the winner!")
