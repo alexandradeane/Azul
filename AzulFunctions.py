@@ -203,30 +203,34 @@ def BagIsEmpty(game_state):
     return False
 
 def Player1_Move(game_state):
-    nextMove = Player2_Move(game_state)
-    return nextMove
-
-def Player2_Move(game_state):
     factory = "Default"
     colour = 0
     row = "Zeroith"
-    # Get some valid user input for factory
+    # Get some valid user input for which factory to take from
     while True:
         try:
-            factory = str(input("Please enter Factory #: "))
+            factory_num = input("Please enter Factory # (or 'c' for center): ")
+            if factory_num == 'c' or factory_num == 'C'\
+                or factory_num == 'center' or factory_num == 'Center'\
+                or factory_num == 'CENTER' or factory_num == 'centre'\
+                or factory_num == 'Centre' or factory_num == 'CENTRE':
+                    factory = 'Center'
+            else:
+                factory_num = int(factory_num)
+                factory = "Factory " + str(factory_num)
         except ValueError:
-            print("You did not enter a string")
-            continue
+            print("You did not enter an integer value, please try again")
         else:
+            #print("FACTORY: ", factory)
             if not ValidFactory(game_state, factory):
                 continue
             break
-    # Get some valid user input for colour
+    # Get some valid user input for row to put tile
     while True:
         try:
             colour = int(input("Which colour do you take? "))
         except ValueError:
-            print("You did not enter a number")
+            print("You did not enter an integer value, please try again")
             continue
         else:
             if not ValidColour(game_state, colour, factory):
@@ -234,19 +238,31 @@ def Player2_Move(game_state):
             break
     # Get some valid user input for row to put tile
     while True:
-        try:
-            row = str(input("Which row will you put it in? "))
-        except ValueError:
-            print("You did not enter a string")
-            continue
-        else:
-            if not ValidRow(game_state, row, colour):
-                print("Not a valid row")
-                continue
+        row_str = input("Which row will you put it in? ")
+        if row_str in ["First", "Second", "Third", "Fourth", "Fifth"]:
             break
+        row_str = int(row_str)
+        if row_str == 1:
+            row = "First"
+        if row_str == 2:
+            row = "Second"
+        if row_str == 3:
+            row = "Third"
+        if row_str == 4:
+            row = "Fourth"
+        if row_str == 5:
+            row = "Fifth"
+        if not ValidRow(game_state, row, colour):
+            continue
+        break
+
     if factory == "Default" or colour == 0 or row == "Zeroith":
-        print("ERROR, the moves never changed from the default")
-    nextMove = {"Factory": factory, "Colour": colour, "Row": row}
+        print("ERROR PLAYER 1 MOVE, the moves never changed from the default")
+    move = {"Factory": factory, "Colour": colour, "Row": row}
+    return move
+
+def Player2_Move(game_state):
+    nextMove = Player1_Move(game_state)
     return nextMove
 
 def ValidFactory(game_state, factory):
@@ -456,7 +472,7 @@ if __name__ == "__main__":
     GameState["Scoreboard"]["Player 1"] = 100
 
     assert ValidRow(GameState, "Second", 1) == True
-    """
+
     print("#################### BEFORE SCORING #########################")
     DisplayGame(GameState)
     print("Cloth Bag: ", GameState["Cloth Bag"])
@@ -493,6 +509,6 @@ if __name__ == "__main__":
     #print("lilGameState before: ", lilGameState)
     #BoxLidToBag(lilGameState)
     #print("lilGameState after: ", lilGameState)
-    """
+
 
 

@@ -14,6 +14,7 @@ from AzulFunctions import *
 
 print("Initializing GameState")
 GameState = InitializeGame()
+GameState["Next Player"] = "Player 1" #Testing purposes
 
 print("Commencing the gameplay loop")
 while True:
