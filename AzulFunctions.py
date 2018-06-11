@@ -1,13 +1,14 @@
 # Written by Alexandra Deane
 # runs with Python 3.6
+# contains all the functions used in CommandLineAzul.py
 
 import random
 
-BackgroundPassiveBoard = [[1, 2, 3, 4, 5],
-                          [5, 1, 2, 3, 4],
-                          [4, 5, 1, 2, 3],
-                          [3, 4, 5, 1, 2],
-                          [2, 3, 4, 5, 1]]
+BackgroundBoard = [[1, 2, 3, 4, 5],
+                    [5, 1, 2, 3, 4],
+                    [4, 5, 1, 2, 3],
+                    [3, 4, 5, 1, 2],
+                    [2, 3, 4, 5, 1]]
 
 def InitializeGame():
     cloth_bag = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -332,9 +333,9 @@ def PlaceToPutTile(colour, row, player):  # returns x,y coords (indexed from 0)
     ro = row - 1
     col = 100
     for i in range(5):
-        if BackgroundPassiveBoard[ro][i] == colour:
+        if BackgroundBoard[ro][i] == colour:
             col = i
-    if col == 100: print("ERROR! Your backgroundpassiveboard is screwed up")
+    if col == 100: print("ERROR! Your BackgroundBoard is screwed up")
     return ro, col
 
 def RowIsFull(game_state, row, player):  # row is passed as an string
@@ -452,9 +453,8 @@ def EndConditionsMet(game_state):
     return False
 
 if __name__ == "__main__":
-    ### This is an entire setup to facilitate scoring tests ###
-
-
+    ### This is an entire setup to facilitate tests ###
+    ### Not particularly organized ###
 
     GameState = InitializeGame()
     player = GameState["Next Player"]
@@ -471,8 +471,6 @@ if __name__ == "__main__":
                                          "Fifth": [5, 5, 5, 5]}
     GameState[player]["Floor"] = [3, 3, 1, 4, 5, 5, 3, 5, 2]
     GameState["Scoreboard"]["Player 1"] = 100
-
-    assert ValidRow(GameState, "Second", 1) == True
 
     print("#################### BEFORE SCORING #########################")
     DisplayGame(GameState)
@@ -498,18 +496,3 @@ if __name__ == "__main__":
     DisplayGame(GameState)
     print("Cloth Bag: ", GameState["Cloth Bag"])
     print("Box Lid: ", GameState["Box Lid"])
-
-    EndConditionsMet(GameState)
-
-    #print("##### Score: ", GameState["Scoreboard"])
-
-    #print(OccupiedWallCord(GameState, player, 2, 0))
-
-
-    #lilGameState = {"Box Lid": [5, 8], "Cloth Bag": [2]}
-    #print("lilGameState before: ", lilGameState)
-    #BoxLidToBag(lilGameState)
-    #print("lilGameState after: ", lilGameState)
-
-
-

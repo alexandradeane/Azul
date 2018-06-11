@@ -1,15 +1,16 @@
-# Written by Alexandra Deane
-# runs with python 3.6
-
 """
-Todo: congratulate winner, Write a display function for after scoring,
+Written by Alexandra Deane
+runs with Python 3.6
+
+This is a simple implementation of the board game Azul for rwo players
+
+Todo:
+congratulate winner, Write a display function for after scoring,
 rewrite with better fundamental data structure (integers instead of strings),
 make a simple way to add an AI script, think about graphics
 """
 
 from AzulFunctions import *
-
-# Sample_Move = {"Factory": "Factory 1", "Colour": 1, "Row": "First"}
 
 print("Initializing GameState")
 GameState = InitializeGame()
@@ -19,20 +20,20 @@ while True:
     print("\nNEXT PLAYER:")
     DisplayGame(GameState)
 
-    # Player gives move
+    # Player enters their move
     if GameState["Next Player"] == "Player 1":
         move = Player1_Move(GameState)
     else:
         move = Player2_Move(GameState)
 
-    # Gamestate updated accordingly
+    # Gamestate is updated accordingly
     print("\n", move, "\n")
     UpdateGameState(GameState, move)
     print("UPDATED PLAYER BOARD:")
     DisplayGame(GameState)
     UpdatePlayer(GameState)
 
-    # Checks for end of round
+    # Check for end of round
     if NoMoreTiles(GameState):
         print("*** End of the round! ***")
         print("Scoring Player 1")
